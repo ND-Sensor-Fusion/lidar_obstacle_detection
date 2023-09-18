@@ -1,0 +1,4 @@
+/**: 
+  lidar_obstacle_detection:
+    ros__parameters:
+        renderScene: false
