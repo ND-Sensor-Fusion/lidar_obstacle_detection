@@ -9,6 +9,7 @@ docker run -it --rm \
     --net="host" \
     --volume="/dev/shm:/dev/shm" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+    --volume="$(realpath ../config):/root/colcon_ws/install/lidar_obstacle_detection/share/lidar_obstacle_detection/config" \
     pang/lidar_obstacle_detection:1 \
     bash
     

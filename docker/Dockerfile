@@ -41,7 +41,7 @@ RUN apt-get update || true && \
 # Install ROS 2 Base packages and Python dependencies
 RUN apt-get update || true && \
   apt-get install --no-install-recommends -y \
-  ros-${ROS2_DIST}-ros-base \
+  ros-${ROS2_DIST}-desktop \
   ros-${ROS2_DIST}-ament-cmake-clang-format \
   python3-flake8-docstrings \
   python3-pip \
@@ -55,9 +55,6 @@ RUN apt-get update || true && \
 
 # Initialize rosdep
 RUN rosdep init && rosdep update
-
-# Install the ZED ROS2 Wrapper
-ENV ROS_DISTRO ${ROS2_DIST}
 
 #===  ================================================================================================================
 
@@ -74,26 +71,27 @@ RUN apt update && apt install -y --no-install-recommends \
 # ros packages
 RUN apt update && apt install -y --no-install-recommends \
 	ros-humble-ros-base ros-humble-ament-cmake-clang-format \
-  ros-humble-ros-rclcpp_action \
-  ros-humble-ros-std_srvs \
-  ros-humble-ros-std_msgs \
-  ros-humble-ros-sensor_msgs \
-  ros-humble-ros-geometry_msgs \
-  ros-humble-ros-visualization_msgs \
-  ros-humble-ros-ament_index_cpp \
-  ros-humble-ros-pcl_conversions \
-  ros-humble-ros-pcl_ros \
-  ros-humble-ros-pcl_msgs \
+  ros-humble-rclcpp-action \
+  ros-humble-std-srvs \
+  ros-humble-std-msgs \
+  ros-humble-sensor-msgs \
+  ros-humble-geometry-msgs \
+  ros-humble-visualization-msgs \
+  ros-humble-ament-index-cpp \
+  ros-humble-ament-cmake \
+  ros-humble-pcl-conversions \
+  ros-humble-pcl-ros \
+  ros-humble-pcl-msgs \
 	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #=== END ROS
 
 #=== Terminals
 RUN apt update && apt install -y --no-install-recommends \
-	lxterminal xterm unzip \
+	lxterminal xterm \
 	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
-#=== Python -> flask, opcua
+#=== Python -> packages
 RUN pip3 install --ignore-installed pexpect
 
 # Force rebuild (break cache) from here
@@ -101,16 +99,16 @@ ARG DUMMY
 RUN DUMMY=${DUMMY} 
 
 #=== Clone repo
-WORKDIR /root/colcon_ws
+WORKDIR /root/colcon_ws/src
 ARG GIT_TOKEN
 ARG BRANCH
 RUN git config --global url."https://${GIT_TOKEN}:@github.com/".insteadOf "https://github.com/"
-RUN git clone --recursive -b ${BRANCH} https://github.com/
+RUN git clone --recursive -b ${BRANCH} https://github.com/ND-Sensor-Fusion/lidar_obstacle_detection
 WORKDIR /root/colcon_ws
 
 #=== BUILD PACKAGE
-
-RUN /bin/bash -c "source /opt/ros/$ROS2_DISTRO/setup.bash && \
+WORKDIR /root/colcon_ws
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
   apt-get update -y || true && \
   colcon build --parallel-workers $(nproc) \
   --cmake-args ' -DCMAKE_BUILD_TYPE=Release' \

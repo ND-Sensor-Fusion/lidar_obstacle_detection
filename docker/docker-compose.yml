@@ -10,12 +10,13 @@ services:
       - DISPLAY=$DISPLAY
     tty: true
     stdin_open: true
-    command: ros2 launch lidar_obstacle_detection environment.launch.py 
+    command: ros2 launch lidar_obstacle_detection environment.launch.py use_rviz:=true env_config:=config/environment.yaml
     privileged: true
     volumes:
       # - ../data:/root/colcon_ws/src/lidar_obstacle_detection/data
       - /dev/shm:/dev/shm
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - "../config:/root/colcon_ws/install/lidar_obstacle_detection/share/lidar_obstacle_detection/config"
 
 # networks:
 #   network1:

@@ -1,0 +1,18 @@
+name: yapf-format-check
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main, dev ]
+jobs:
+  yapf-formatting-check:
+    name: Yapf Formatting Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: run YAPF to test if python code is correctly formatted
+      uses: AlexanderMelde/yapf-action@master
+      with:
+        args: -v #\
+              #-e **/floder/** \
+        

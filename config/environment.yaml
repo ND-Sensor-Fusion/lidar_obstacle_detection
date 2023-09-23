@@ -1,4 +1,24 @@
-/**: 
+/**:
   lidar_obstacle_detection:
     ros__parameters:
-        renderScene: false
+      renderScene: false
+      simpleHighway: false # true for static example
+      publish_input_cloud: true
+      data_folder: "data_2"
+      downroi:
+        filterRes: 0.2
+        minx: -10.0
+        miny: -7.0
+        minz: -3.0 # with -5 we have a cluster below the road?
+        mini: 1.0
+        maxx: 30.0
+        maxy: 7.0
+        maxz: 5.0
+        maxi: 1.0
+      ransac:
+        maxIterations: 50
+        distanceThreshold: 0.25
+      clustering:
+        distanceTol: 0.3 #1.0 #for kdtree
+        minPoints: 10
+        maxPoints: 1000

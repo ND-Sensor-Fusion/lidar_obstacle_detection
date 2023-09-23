@@ -1,0 +1,41 @@
+name: build-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+jobs:
+  build-check:
+    runs-on: ubuntu-22.04
+    container:
+      image: osrf/ros:humble-desktop
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: colcon_ws/src
+
+      - name: Install ROS 2 dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-colcon-common-extensions
+          sudo apt-get install -y --no-install-recommends \
+            ros-humble-ament-cmake-clang-format \
+            ros-humble-rclcpp-action \
+            ros-humble-std-srvs \
+            ros-humble-std-msgs \
+            ros-humble-sensor-msgs \
+            ros-humble-geometry-msgs \
+            ros-humble-visualization-msgs \
+            ros-humble-ament-index-cpp \
+            ros-humble-ament-cmake \
+            ros-humble-pcl-conversions \
+            ros-humble-pcl-ros \
+            ros-humble-pcl-msgs \
+
+      - name: Build Workspace
+        run: |
+          /bin/bash -c "source /opt/ros/humble/setup.bash && cd .. && cd .. && colcon build --parallel-workers $(nproc) --symlink-install --base-paths src --cmake-args ' -DCMAKE_BUILD_TYPE=Release'"

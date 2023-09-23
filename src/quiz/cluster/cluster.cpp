@@ -3,7 +3,7 @@
 
 #include "../../render/box.h"
 #include "../../render/render.h"
-#include "kdtree.h"
+#include "kdtree_2d.h"
 #include <chrono>
 #include <string>
 
@@ -45,13 +45,15 @@ void render2DTree(Node *node, pcl::visualization::PCLVisualizer::Ptr &viewer, Bo
     Box lowerWindow = window;
     // split on x axis
     if (depth % 2 == 0) {
-      viewer->addLine(pcl::PointXYZ(node->point[0], window.y_min, 0), pcl::PointXYZ(node->point[0], window.y_max, 0), 0, 0, 1, "line" + std::to_string(iteration));
+      viewer->addLine(pcl::PointXYZ(node->point[0], window.y_min, 0), pcl::PointXYZ(node->point[0], window.y_max, 0), 0, 0, 1,
+                      "line" + std::to_string(iteration));
       lowerWindow.x_max = node->point[0];
       upperWindow.x_min = node->point[0];
     }
     // split on y axis
     else {
-      viewer->addLine(pcl::PointXYZ(window.x_min, node->point[1], 0), pcl::PointXYZ(window.x_max, node->point[1], 0), 1, 0, 0, "line" + std::to_string(iteration));
+      viewer->addLine(pcl::PointXYZ(window.x_min, node->point[1], 0), pcl::PointXYZ(window.x_max, node->point[1], 0), 1, 0, 0,
+                      "line" + std::to_string(iteration));
       lowerWindow.y_max = node->point[1];
       upperWindow.y_min = node->point[1];
     }
@@ -62,7 +64,8 @@ void render2DTree(Node *node, pcl::visualization::PCLVisualizer::Ptr &viewer, Bo
   }
 }
 
-void clusterHelper(int indice, const std::vector<std::vector<float>> points, std::vector<int> &cluster, std::vector<bool> &processed, KdTree *tree, float distanceTol) {
+void clusterHelper(int indice, const std::vector<std::vector<float>> points, std::vector<int> &cluster, std::vector<bool> &processed, KdTree *tree,
+                   float distanceTol) {
   processed[indice] = true;
   cluster.push_back(indice);
   std::vector<int> nearest = tree->search(points[indice], distanceTol);
@@ -108,7 +111,8 @@ int main() {
   pcl::visualization::PCLVisualizer::Ptr viewer = initScene(window, 25);
 
   // Create data
-  std::vector<std::vector<float>> points = {{-6.2, 7}, {-6.3, 8.4}, {-5.2, 7.1}, {-5.7, 6.3}, {7.2, 6.1}, {8.0, 5.3}, {7.2, 7.1}, {0.2, -7.1}, {1.7, -6.9}, {-1.2, -7.2}, {2.2, -8.9}};
+  std::vector<std::vector<float>> points = {{-6.2, 7},  {-6.3, 8.4}, {-5.2, 7.1}, {-5.7, 6.3},  {7.2, 6.1}, {8.0, 5.3},
+                                            {7.2, 7.1}, {0.2, -7.1}, {1.7, -6.9}, {-1.2, -7.2}, {2.2, -8.9}};
   //   std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3} };
   //   std::vector<std::vector<float>> points = {{-6.2, 7}};
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData(points);

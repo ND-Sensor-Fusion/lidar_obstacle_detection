@@ -41,7 +41,7 @@ add_definitions(${EIGEN_DEFINITIONS})
 # )
 
 #### MAIN
-add_executable(environment src/environment.cpp src/render/render.cpp src/processPointClouds.cpp)
+add_executable(environment src/environment.cpp src/render/render.cpp src/processPointClouds.cpp src/ransac_3d.cpp)
 ament_target_dependencies(environment ${dependencies})
 target_link_libraries(environment ${PCL_LIBRARIES})
 ####

@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 Language: Cpp
-ColumnLimit: 300
+ColumnLimit: 160
 AlignTrailingComments: true
 TabWidth: 2
 AllowShortFunctionsOnASingleLine: Empty

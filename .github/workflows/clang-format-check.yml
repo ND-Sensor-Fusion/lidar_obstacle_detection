@@ -1,0 +1,28 @@
+name: clang-format-check
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main, dev]
+jobs:
+  clang-formatting-check:
+    name: Clang Formatting Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path:
+          # this package
+          - check: "."
+            exclude: ""
+            # exclude: '(hello|world)' # Exclude file paths containing "hello" or "world"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run clang-format style check for C/C++/Protobuf programs.
+        uses: jidicula/clang-format-action@v4.11.0
+        with:
+          clang-format-version: "14"
+          check-path: ${{ matrix.path['check'] }}
+          exclude-regex: ${{ matrix.path['exclude'] }}
+          file-extensions: ".cpp .h .hpp"
+          # fallback-style: 'Mozilla' # optional
